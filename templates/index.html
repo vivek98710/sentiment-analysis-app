@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader | Professional HD Video Downloads</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fab fa-youtube"></i>
+                <h1>YT Downloader Pro</h1>
+            </div>
+            <p class="subtitle">Professional YouTube Video Downloader</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- URL Input Section -->
+            <section class="url-section">
+                <div class="input-group">
+                    <div class="input-container">
+                        <i class="fas fa-link"></i>
+                        <input type="url" id="videoUrl" placeholder="Paste YouTube URL here..." autocomplete="off">
+                        <button id="analyzeBtn" class="analyze-btn">
+                            <i class="fas fa-search"></i>
+                            Analyze
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section id="loadingSection" class="loading-section hidden">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Analyzing video...</p>
+                </div>
+            </section>
+
+            <!-- Video Info Section -->
+            <section id="videoInfoSection" class="video-info-section hidden">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img id="videoThumbnail" src="" alt="Video Thumbnail">
+                        <div class="video-duration">
+                            <span id="videoDuration"></span>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <h2 id="videoTitle"></h2>
+                        <div class="video-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-user"></i>
+                                <span id="videoUploader"></span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-eye"></i>
+                                <span id="videoViews"></span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                <span id="videoDate"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Options -->
+                <div class="download-options">
+                    <h3>Download Options</h3>
+                    
+                    <!-- Quick Download Buttons -->
+                    <div class="quick-downloads">
+                        <button class="download-btn primary" onclick="quickDownload('best', false)">
+                            <i class="fas fa-download"></i>
+                            Best Quality Video
+                        </button>
+                        <button class="download-btn secondary" onclick="quickDownload('bestaudio', true)">
+                            <i class="fas fa-music"></i>
+                            Audio Only (MP3)
+                        </button>
+                    </div>
+
+                    <!-- Advanced Options -->
+                    <div class="advanced-options">
+                        <button class="toggle-advanced" onclick="toggleAdvanced()">
+                            <i class="fas fa-cog"></i>
+                            Advanced Options
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        
+                        <div id="advancedPanel" class="advanced-panel hidden">
+                            <div class="format-selector">
+                                <label for="formatSelect">Choose Format:</label>
+                                <select id="formatSelect">
+                                    <option value="best">Best Quality (Auto)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="download-type">
+                                <label>
+                                    <input type="radio" name="downloadType" value="video" checked>
+                                    <span>Video + Audio</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="downloadType" value="audio">
+                                    <span>Audio Only</span>
+                                </label>
+                            </div>
+                            
+                            <button class="download-btn primary" onclick="customDownload()">
+                                <i class="fas fa-download"></i>
+                                Download with Selected Options
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progressSection" class="progress-section hidden">
+                <div class="progress-card">
+                    <h3>Download Progress</h3>
+                    <div class="progress-info">
+                        <div class="progress-item">
+                            <span class="label">File:</span>
+                            <span id="downloadFilename">-</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="label">Progress:</span>
+                            <span id="downloadPercent">0%</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="label">Speed:</span>
+                            <span id="downloadSpeed">-</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="label">ETA:</span>
+                            <span id="downloadEta">-</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <div id="downloadStatus" class="download-status"></div>
+                </div>
+            </section>
+
+            <!-- Downloads History -->
+            <section class="downloads-section">
+                <div class="section-header">
+                    <h3>
+                        <i class="fas fa-history"></i>
+                        Recent Downloads
+                    </h3>
+                    <button class="refresh-btn" onclick="loadDownloads()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+                <div id="downloadsList" class="downloads-list">
+                    <!-- Downloads will be loaded here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 YT Downloader Pro. Built with modern web technologies.</p>
+            <div class="footer-links">
+                <a href="#" onclick="showAbout()">About</a>
+                <a href="#" onclick="showPrivacy()">Privacy</a>
+                <a href="#" onclick="showTerms()">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal for notifications -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
